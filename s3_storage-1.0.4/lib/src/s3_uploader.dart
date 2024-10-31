@@ -9,6 +9,7 @@ import 'package:s3_storage/s3_storage.dart';
 import 'package:s3_storage/src/s3_client.dart';
 import 'package:s3_storage/src/s3_helpers.dart';
 import 'package:s3_storage/src/utils.dart';
+import 'package:intl/intl.dart';
 
 class StorageUploader implements StreamConsumer<Uint8List> {
   StorageUploader(
@@ -50,6 +51,10 @@ class StorageUploader implements StreamConsumer<Uint8List> {
       final headers = <String, String>{};
       headers.addAll(metadata);
       headers['Content-Length'] = chunk.length.toString();
+      String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now())} GMT';
+      headers['X-AMZ-Date'] = formattedDate;
+      headers['Date'] = formattedDate;
+      headers['date'] = formattedDate;
       if (!client.enableSHA256) {
         md5digest = md5.convert(chunk).bytes;
         headers['Content-MD5'] = base64.encode(md5digest);
