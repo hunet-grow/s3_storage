@@ -51,7 +51,7 @@ class StorageUploader implements StreamConsumer<Uint8List> {
       final headers = <String, String>{};
       headers.addAll(metadata);
       headers['Content-Length'] = chunk.length.toString();
-      String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now())} GMT';
+      String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now().toUtc())} GMT';
       headers['X-AMZ-Date'] = formattedDate;
       headers['Date'] = formattedDate;
       headers['date'] = formattedDate;
