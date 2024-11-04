@@ -51,10 +51,8 @@ class StorageUploader implements StreamConsumer<Uint8List> {
       final headers = <String, String>{};
       headers.addAll(metadata);
       headers['Content-Length'] = chunk.length.toString();
-      String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now().toUtc())} GMT';
+      String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now())} GMT+09:00';
       headers['X-AMZ-Date'] = formattedDate;
-      headers['Date'] = formattedDate;
-      headers['date'] = formattedDate;
       if (!client.enableSHA256) {
         md5digest = md5.convert(chunk).bytes;
         headers['Content-MD5'] = base64.encode(md5digest);
