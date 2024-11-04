@@ -51,8 +51,8 @@ class StorageUploader implements StreamConsumer<Uint8List> {
       final headers = <String, String>{};
       headers.addAll(metadata);
       headers['Content-Length'] = chunk.length.toString();
-      String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now())} GMT+09:00';
-      headers['X-AMZ-Date'] = formattedDate;
+      // String formattedDate = '${DateFormat('EEE, dd MMM y HH:mm:ss').format(DateTime.now())} GMT+09:00';
+      headers['x-amz-date'] = getServerTime();
       if (!client.enableSHA256) {
         md5digest = md5.convert(chunk).bytes;
         headers['Content-MD5'] = base64.encode(md5digest);
@@ -91,7 +91,10 @@ class StorageUploader implements StreamConsumer<Uint8List> {
       _parts[part] = chunk.length;
     }
   }
-
+  String getServerTime() {
+    DateFormat dateFormat = DateFormat("EEE, dd MMM yyyy HH:mm:ss Z", 'en_US');
+    return dateFormat.format(DateTime.now().toUtc());
+  }
   @override
   Future<String?> close() async {
     if (_uploadId == null) return _etag;
